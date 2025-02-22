@@ -3,16 +3,14 @@ import firefox_linkgrabber
 from log_manager import LogManager
 from transcriber import Transcriber  # Import Transcriber
 
+FIREFOX = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
 
 def main():
-    firefox_binary_path = (
-        r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
-    )
     # Initialize LogManager
     log_manager = LogManager(project_name="VODDownloader")
     # Initialize Transcriber
     transcriber = Transcriber(log_manager=log_manager)
-    vods = firefox_linkgrabber(firefox_binary_path)
+    vods = firefox_linkgrabber(FIREFOX)
 
     # Get already downloaded VODs
     downloaded_vods = log_manager.get_downloaded_vods()

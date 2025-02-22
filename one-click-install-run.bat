@@ -1,6 +1,6 @@
 @echo off
 SET venv_dir=venv
-SET pyfile=mute_cursing_wav.py
+SET pyfile=main.py
 SET python=%venv_dir%\Scripts\python.exe
 
 REM Check if the virtual environment directory exists
@@ -35,8 +35,8 @@ IF NOT "%VIRTUAL_ENV%" == "" (
     
     :FoundPyFile
     REM Run the Python script
+    %python% -m pip install --upgrade pip
     %python% %pyfile%
-    GOTO FoundPyFile
 ) ELSE (
     ECHO Failed to activate virtual environment.
 )
