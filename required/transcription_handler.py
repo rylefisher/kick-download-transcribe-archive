@@ -1,10 +1,10 @@
 # main.py
-import firefox_linkgrabber
-import log_manager
-import stable_whisper_handler  # Import Transcriber
-import ytdlp
+import required.firefox_linkgrabber as firefox_linkgrabber
+import required.log_manager as log_manager
+import required.stable_whisper_handler as stable_whisper_handler  # Import Transcriber
+import required.ytdlp as ytdlp
 import os
-import file_management
+import required.file_management as file_management
 
 
 
