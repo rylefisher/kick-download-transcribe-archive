@@ -3,9 +3,6 @@ import os
 import json
 from pathlib import Path
 
-def filter_vods(vods, downloaded_vods):
-    return [vod for vod in vods if vod["id"] not in downloaded_vods]
-
 class LogManager:
     def __init__(self, project_name="MyProject"):
         self.base_dir = Path.home() / "Documents" / project_name
@@ -40,3 +37,5 @@ class LogManager:
         # Retrieve transcriptions
         with open(self.transcription_log_file, "r") as f:
             return json.load(f)
+    def filter_vods(self, vods, downloaded_vods):
+        return [vod for vod in vods if vod["id"] not in downloaded_vods]
