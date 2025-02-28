@@ -16,11 +16,6 @@ def main():
 
     # bypass for testing purposes
     downloaded_vods = log_manager_.get_downloaded_vods()
-    clean_vods = []
-    for vod in vods:
-        if "jstlk/videos" in vod:
-            clean_vods.append(vod.replace("/jstlk/videos/jstlk/videos/", "/jstlk/videos/"))
-    vods = clean_vods
 
     # Filter VODs - bypass for testing purposes
     # vods_to_download = log_manager_.filter_vods(vods, downloaded_vod_ids)
