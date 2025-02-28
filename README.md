@@ -10,3 +10,8 @@ all binary files can be found in the release section
 ## Howto
 
 Run bat 
+
+## prompt to reverse engineer bat
+
+```write a bat file that looks for existing venv, if none exists, create venv in working dir. if requirements.txt file found, after activating, pip install upgrade requirements. if main.py file exists in working dir, run, otherwise use set variable py file as backup to run from venv, otherwise use first alphabetic py file. 
+```
