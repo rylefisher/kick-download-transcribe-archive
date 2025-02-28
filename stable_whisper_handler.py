@@ -11,6 +11,12 @@ from pathlib import Path
 import json
 import stable_whisper
 
+import os
+import subprocess
+from pathlib import Path
+import json
+import stable_whisper
+
 
 class Transcriber:
     def __init__(self, log_manager=None, model_size="base"):
@@ -39,18 +45,26 @@ class Transcriber:
         """Split audio into segments of a specified length."""
         base_name = os.path.splitext(source_audio)[0]
         segments = []
-        duration = int(subprocess.check_output([
-            "ffprobe", "-v", "error", "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", source_audio
-        ]).strip())
-
-        for start_time in range(0, duration, segment_length):
-            segment_file = f"{base_name}_segment_{start_time}.wav"
-            segments.append(segment_file)
-            subprocess.run([
-                "ffmpeg", "-i", source_audio, "-ss", str(start_time),
-                "-t", str(segment_length), segment_file, "-y"
+        
+        try:
+            # Get total duration of audio in seconds
+            duration_output = subprocess.check_output([
+                "ffprobe", "-v", "error", "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1", source_audio
             ])
+            duration = float(duration_output.strip())  # Ensure duration is a float
+
+            for start_time in range(0, int(duration), segment_length):
+                segment_file = f"{base_name}_segment_{start_time}.wav"
+                segments.append(segment_file)
+                subprocess.run([
+                    "ffmpeg", "-i", source_audio, "-ss", str(start_time),
+                    "-t", str(segment_length), segment_file, "-y"
+                ])
+        except ValueError as e:
+            print(f"Error parsing duration: {e}")
+            raise
+
         return segments
 
     def transcribe_audio_segments(self, segments):
@@ -58,7 +72,7 @@ class Transcriber:
         combined_transcript = {}
         for segment in segments:
             result = self.model.transcribe(audio=segment, word_timestamps=True)
-            segment_start = int(segment.split('_')[-1].replace('.wav', ''))
+            segment_start = int(segment.split('_')[-1].replace('.wav', ''))  # Ensure this is int-compatible
             combined_transcript[segment_start] = result.to_dict()
 
             # Remove the segment after transcription
@@ -70,7 +84,6 @@ class Transcriber:
             audio_path = self.convert_to_wav(video_path)
             segments = self.split_wav_to_segments(audio_path, segment_length=60)
 
-            # Transcribe each hour individually
             result_json = {}
             segment_count = len(segments)
             hours = (segment_count * 60) // 3600 + 1  # total hours in the video
@@ -82,7 +95,6 @@ class Transcriber:
                 if hour_transcript:
                     result_json.update(hour_transcript)
 
-            # Save combined transcript as JSON
             combined_json_path = audio_path.replace('.wav', '_transcript.json')
             with open(combined_json_path, 'w') as json_file:
                 json.dump(result_json, json_file)

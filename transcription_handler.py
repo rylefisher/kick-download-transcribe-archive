@@ -19,7 +19,7 @@ def main(vid=None):
     wav_output = vid.split('.mp4')[0] + "_output.wav"
  
     trans_obj = stable_whisper_handler.Transcriber()
-    transcription = trans_obj.transcribe_video(vid, wav_output)
+    transcription = trans_obj.transcribe_video(vid)
 
     if transcription:
         print(f"Transcription for VOD {vid}", transcription)
