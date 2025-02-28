@@ -4,6 +4,12 @@ import log_manager
 import transcriber  # Import Transcriber
 import ytdlp
 import os 
+import transcription_handler 
+
+"""
+while testing---
+to skip download, use transcription_handler.py
+"""
 
 FIREFOX = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
 
@@ -27,6 +33,7 @@ def main():
         log_manager_.log_vod_download(vod)
         downloaded_file = ytdlp.download_video(vod, download_path)
         if downloaded_file:
+            transcription_handler.main(downloaded_file)
             wav_output = os.path.join(download_path, "output.wav")
             ytdlp.convert_to_wav(downloaded_file, wav_output)
 
