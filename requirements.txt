@@ -46,3 +46,4 @@ wsproto==1.2.0
 torch
 torchvision
 torchaudio
+yt-dlp

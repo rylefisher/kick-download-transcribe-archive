@@ -55,18 +55,17 @@ class SeleniumFetcher:
 
 def main(firefox_binary_path=None):
     if firefox_binary_path==None:
-        binary_path = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
+        firefox_binary_path = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
     page_url = "https://kick.com/jstlk/videos"
     base_url = "https://kick.com/jstlk/videos"
-    fetcher = SeleniumFetcher(binary_path=binary_path)
+    fetcher = SeleniumFetcher(binary_path=firefox_binary_path)
     content = fetcher.fetch_page_content(page_url)
     video_urls = fetcher.find_combined_video_urls(content, base_url)
     print("Found Video URLs:")
     for video_url in video_urls:
         print(video_url)
-    return video_url
+    return video_urls
 
 if __name__ == "__main__":
     binary_path = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
     main(binary_path)
-    

@@ -10,16 +10,17 @@ def main():
     log_manager_ = log_manager.LogManager(project_name="VODDownloader")
     # Initialize Transcriber
     transcriber_ = transcriber.Transcriber(log_manager=log_manager_)
-    vods = firefox_linkgrabber.SeleniumFetcher.main(FIREFOX)
+    vods = firefox_linkgrabber.main(FIREFOX)
 
     # Get already downloaded VODs
     downloaded_vods = log_manager_.get_downloaded_vods()
-    downloaded_vod_ids = {vod["id"] for vod in downloaded_vods}
+    # downloaded_vod_ids = {vod["id"] for vod in downloaded_vods}
 
     # Filter VODs
-    vods_to_download = log_manager_.filter_vods(vods, downloaded_vod_ids)
-
-    for vod in vods_to_download:
+    # vods_to_download = log_manager_.filter_vods(vods, downloaded_vod_ids)
+    vods_to_download = []
+    vods_to_download = downloaded_vods
+    for vod in vods:
         # Log downloaded VOD
         log_manager_.log_vod_download(vod)
 
