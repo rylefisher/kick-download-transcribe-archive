@@ -1,7 +1,7 @@
 # main.py
 import firefox_linkgrabber
 import log_manager
-import transcriber  # Import Transcriber
+import stable_whisper_handler  # Import Transcriber
 import ytdlp
 import os 
 import transcription_handler 
@@ -17,7 +17,7 @@ def main():
     # Initialize LogManager
     log_manager_ = log_manager.LogManager(project_name="VODDownloader")
     # Initialize Transcriber
-    transcriber_ = transcriber.Transcriber(log_manager=log_manager_)
+    transcriber_ = stable_whisper_handler.Transcriber(log_manager=log_manager_)
     vods = firefox_linkgrabber.main(FIREFOX)
 
     # bypass for testing purposes
