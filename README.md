@@ -2,13 +2,13 @@
 
 all binary files can be found in the release section
 
-- FFmpeg:
+- [FFmpeg](https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/ffmpeg-essentials.7z ):
 -     https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/ffmpeg-essentials.7z 
-- Python 3.10.11:
+- [Python 3.10.11](https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe):
 -     https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe
-- HandbrakeCLI: 
+- [HandbrakeCLI](https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/HandBrakeCLI.exe ): 
 -     https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/HandBrakeCLI.exe 
-- YT-DLP in working dir:
+- [YT-DLP](https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/yt-dlp.exe) in working dir:
 -     https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/yt-dlp.exe
 
 ## Howto
