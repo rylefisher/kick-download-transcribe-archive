@@ -36,7 +36,7 @@ def main():
             downloaded_file = file_management.clean_path(downloaded_file)
             transcription = transcription_handler.main(downloaded_file)
         if transcription:
-            print(f"Transcription for VOD {vod['title']}", transcription)
+            print(f"Transcription for VOD {idn}", transcription)
         break
 
 if __name__ == "__main__":

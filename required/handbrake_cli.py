@@ -1,9 +1,9 @@
-import subprocess
 import os
-
+import subprocess
+cwd = os.getcwd()
 
 class HandbrakeConverter:
-    def __init__(self, handbrake_cli_path="HandBrakeCLI.exe"):
+    def __init__(self, handbrake_cli_path=cwd + "/HandBrakeCLI.exe"):
         self.handbrake_cli_path = handbrake_cli_path
 
     def convert_video(self, input_path):
@@ -11,27 +11,33 @@ class HandbrakeConverter:
             print(f"The file {input_path} does not exist.")
             return
 
-        output_path = self._get_output_path(input_path)
-        command = [
-            self.handbrake_cli_path,
-            "-i",
-            input_path,
-            "-o",
-            output_path,
-            "--preset",
-            "Very Fast 1080p30",
+        output_path = self._get_output_path(input_path)    
+        # List of configurations to try in order: HEVC, QSV, Very Fast 720p
+        configurations = [
+            ("hevc", "veryfast"), # HEVC with very fast encoder
+            ("qsv_h265", None),   # QSV if available (no extra preset)
+            ("h264", "veryfast")  # Fallback: Very Fast 720p
         ]
 
-        # Run the HandBrakeCLI command to convert the video
-        try:
-            subprocess.run(command, check=True)
-            print(f"Conversion successful: {output_path}")
-            self._delete_original(input_path)
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred during conversion: {e}")
+        for (codec, preset) in configurations:
+            command = [
+                self.handbrake_cli_path,
+                "-i", input_path,
+                "-o", output_path,
+                "--encoder", codec
+            ]
+            if preset:
+                command.extend(["--preset", preset])
+
+            try:
+                subprocess.run(command, check=True)
+                print(f"Conversion successful: {output_path}")  # Successful conversion
+                self._delete_original(input_path)
+                break
+            except subprocess.CalledProcessError:
+                print(f"Conversion failed with codec {codec}, trying next option.")
 
     def _get_output_path(self, input_path):
-        # Define the output path by changing the file extension to '.mp4'
         base, _ = os.path.splitext(input_path)
         return f"{base}_converted.mp4"
 
@@ -42,7 +48,8 @@ class HandbrakeConverter:
         except OSError as e:
             print(f"Error deleting original file: {e}")
 
-
-# Example usage:
-# converter = HandbrakeConverter().convert_video('path/to/your/video.mkv')
-# converter
+if __name__ == "__main__":
+    hbrake = HandbrakeConverter()
+    vid_path = r"C:\Users\dower\Videos\Nuclear Content  New Warren Smith Video  Dani Attacked In The Streets In Japan .mp4"
+    hbrake.convert_video(vid_path)
+    hbrake

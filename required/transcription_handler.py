@@ -6,11 +6,7 @@ import required.ytdlp as ytdlp
 import os
 import required.file_management as file_management
 
-
-
 """used for testing and or skipping the download process"""
-VID_PATH = r"C:\Users\dower\Documents\VODDownloader\0fa974ab-cdc0-4e6c-a6a2-3dadc91ea6cb\NUCLEAR_CONTENT__NEW_WARREN_SMITH_VIDEO__DANI_ATTACKED_IN_THE_STREETS_IN_JAPAN_.mp4"
-VID_PATH = file_management.clean_path(VID_PATH)
 
 def main(vid=None):
     if vid == None:
@@ -26,4 +22,6 @@ def main(vid=None):
     return transcription 
 
 if __name__ == "__main__":
-    main()
+    vid_path = r"C:\Users\dower\Videos\Nuclear Content  New Warren Smith Video  Dani Attacked In The Streets In Japan .mp4"
+    # VID_PATH = file_management.clean_path(VID_PATH)
+    main(vid_path)
