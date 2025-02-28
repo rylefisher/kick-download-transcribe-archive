@@ -2,6 +2,8 @@
 import firefox_linkgrabber
 import log_manager
 import transcriber  # Import Transcriber
+import ytdlp
+import os 
 
 FIREFOX = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
 
@@ -15,14 +17,24 @@ def main():
     # Get already downloaded VODs
     downloaded_vods = log_manager_.get_downloaded_vods()
     # downloaded_vod_ids = {vod["id"] for vod in downloaded_vods}
-
+    clean_vods = []
+    for vod in vods:
+        if "jstlk/videos" in vod:
+            clean_vods.append(vod.replace("/jstlk/videos/jstlk/videos/", "/jstlk/videos/"))
+    vods = clean_vods
     # Filter VODs
     # vods_to_download = log_manager_.filter_vods(vods, downloaded_vod_ids)
     vods_to_download = []
     vods_to_download = downloaded_vods
     for vod in vods:
         # Log downloaded VOD
+        idn = vod.split('/')[-1]
+        download_path = str(log_manager_.base_dir) + f"/{idn}"
         log_manager_.log_vod_download(vod)
+        downloaded_file = ytdlp.download_video(vod, download_path)
+        if downloaded_file:
+            wav_output = os.path.join(download_path, "output.wav")
+            ytdlp.convert_to_wav(downloaded_file, wav_output)
 
         # Transcribe the video and log the transcription
         video_file_path = (
