@@ -2,7 +2,7 @@ import os
 import re
 import shutil
 
-def copy_and_rename_video(file_path):
+def clean_path(file_path):
     try:
         # Extract the directory and file name from the original file path
         directory, original_file_name = os.path.split(file_path)
@@ -32,11 +32,11 @@ def copy_and_rename_video(file_path):
     except (FileExistsError, FileNotFoundError, PermissionError) as e:
         # Handle specific errors
         print(f"Error: {e}")
-        return None
+        return file_path
     except Exception as e:
         # Handle any other errors
         print(f"An unexpected error occurred: {e}")
-        return None
+        return file_path
     
     # Return the new file path on success
     return new_file_path

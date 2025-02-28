@@ -5,9 +5,9 @@ import stable_whisper_handler  # Import Transcriber
 import ytdlp
 import os 
 import transcription_handler 
+import file_management
 
 """
-while testing---
 to skip download, use transcription_handler.py
 """
 
@@ -33,16 +33,8 @@ def main():
         log_manager_.log_vod_download(vod)
         downloaded_file = ytdlp.download_video(vod, download_path)
         if downloaded_file:
-            transcription_handler.main(downloaded_file)
-            wav_output = os.path.join(download_path, "output.wav")
-            ytdlp.convert_to_wav(downloaded_file, wav_output)
-
-        # Transcribe the video and log the transcription
-        video_file_path = (
-            f"downloads/{vod['id']}.mp4"  # Assume videos are saved in downloads folder
-        )
-        transcription = transcriber_.transcribe_video(video_file_path, vod["id"])
-
+            downloaded_file = file_management.clean_path(downloaded_file)
+            transcription = transcription_handler.main(downloaded_file)
         if transcription:
             print(f"Transcription for VOD {vod['title']}", transcription)
         break
