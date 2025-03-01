@@ -4,7 +4,7 @@
 - https://github.com/yt-dlp/yt-dlp/releases/download/2025.02.19/yt-dlp.exe
 - https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe
 - https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
-- (any firefox version will do) https://portableapps.com/apps/internet/firefox-portable-nightly 
+- (any firefox version will do but this is what I use) https://portableapps.com/apps/internet/firefox-portable-nightly 
 
 ## Howto
 
