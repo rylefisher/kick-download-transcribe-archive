@@ -8,9 +8,9 @@
 
 ## Howto
 
-Run bat or 
+Run bat or paste below into working dir
 ```bat
-python venv venv
+python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
