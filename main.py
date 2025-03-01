@@ -6,38 +6,50 @@ import required.ytdlp as ytdlp
 import os 
 import required.transcription_handler as transcription_handler 
 import required.file_management as file_management
-
+import required.handbrake_cli as handbrake_cli
 """
 to skip download, use transcription_handler.py
 """
 
-FIREFOX = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
+from pathlib import Path
 
-def main():
-    # Initialize LogManager
-    log_manager_ = log_manager.LogManager(project_name="VODDownloader")
-    # Initialize Transcriber
-    transcriber_ = stable_whisper_handler.Transcriber(log_manager=log_manager_)
-    vods = firefox_linkgrabber.main(FIREFOX)
+class VODProcessor:
+    def __init__(self, firefox_path):
+        self.firefox_path = firefox_path  # Initialize the path to Firefox executable
+        self.log_manager = log_manager.LogManager(project_name="VODDownloader")  # Set up log manager
+        self.transcriber = stable_whisper_handler.Transcriber(log_manager=self.log_manager)  # Set up transcriber
 
-    # bypass for testing purposes
-    downloaded_vods = log_manager_.get_downloaded_vods()
+    def get_vods(self):
+        return firefox_linkgrabber.main(self.firefox_path)  # Retrieve VODs using Firefox
 
-    # Filter VODs - bypass for testing purposes
-    # vods_to_download = log_manager_.filter_vods(vods, downloaded_vod_ids)
+    def download_vod(self, vod):
+        vod_id = vod.split('/')[-1]  # Extract video ID from URL
+        download_path = Path(self.log_manager.base_dir) / vod_id  # Create download path
+        self.log_manager.log_vod_download(vod)  # Log VOD download attempt
+        return ytdlp.download_video(vod, str(download_path))  # Download VOD
 
-    for vod in vods:
-        # Log downloaded VOD
-        idn = vod.split('/')[-1]
-        download_path = str(log_manager_.base_dir) + f"/{idn}"
-        log_manager_.log_vod_download(vod)
-        downloaded_file = ytdlp.download_video(vod, download_path)
-        if downloaded_file:
-            downloaded_file = file_management.clean_path(downloaded_file)
-            transcription = transcription_handler.main(downloaded_file)
-        if transcription:
-            print(f"Transcription for VOD {idn}", transcription)
-        break
+    def process_vod(self, file_path):
+        cleaned_path = file_management.clean_path(file_path)  # Clean file path
+        converter = handbrake_cli.HandbrakeConverter()  # HandBrake conversion setup
+        return converter.convert_video(cleaned_path)  # Convert video
+
+    def transcribe_vod(self, vod_path):
+        return transcription_handler.main(vod_path)  # Get transcription
+
+    def run(self):
+        vods = self.get_vods()
+        downloaded_vods = self.log_manager.get_downloaded_vods()  # Access downloaded VODs
+
+        for vod in vods:
+            downloaded_file = self.download_vod(vod)
+            if downloaded_file:
+                compressed_vod = self.process_vod(downloaded_file)
+                transcription = self.transcribe_vod(compressed_vod)
+                if transcription:
+                    print(f"Transcription for VOD {vod.split('/')[-1]}", transcription)
+                    break  # Stop after processing the first VOD with transcription
 
 if __name__ == "__main__":
-    main()
+    firefox_executable_path = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
+    vod_processor = VODProcessor(firefox_path=firefox_executable_path)
+    vod_processor.run()  # Execute the VOD downloading process
