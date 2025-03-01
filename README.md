@@ -8,10 +8,15 @@
 
 ## Howto
 
-Run bat or create venv, pip install, run main 
-
-## prompt to reverse engineer bat
-
-```md
-write a bat file that looks for existing venv, if none exists, create venv in working dir. if requirements.txt file found, after activating, pip install upgrade requirements. if main.py file exists in working dir, run, otherwise use set variable py file as backup to run from venv, otherwise use first alphabetic py file. 
+Run bat or paste below into working dir
+```bat
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
 ```
+
+## Todo
+
+- write html transcript search
+- make integrated log handler
