@@ -8,7 +8,13 @@
 
 ## Howto
 
-Run bat or create venv, pip install, run main 
+Run bat or 
+```bat
+python venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
+```
 
 ## prompt to reverse engineer bat
 
