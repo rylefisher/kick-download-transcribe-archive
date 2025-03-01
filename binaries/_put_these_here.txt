@@ -1,0 +1,2 @@
+https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/HandBrakeCLI.exe
+https://github.com/rylekittenhouse/kick-download-transcribe-archive/releases/download/v1/yt-dlp.exe
