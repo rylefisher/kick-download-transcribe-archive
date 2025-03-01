@@ -8,12 +8,8 @@ import required.file_management as file_management
 
 """used for testing and or skipping the download process"""
 
-def main(vid=None):
-    if vid == None:
-        vid = VID_PATH
-    
+def main(vid):
     wav_output = vid.split('.mp4')[0] + "_output.wav"
- 
     trans_obj = stable_whisper_handler.Transcriber()
     transcription = trans_obj.transcribe_video(vid)
 
