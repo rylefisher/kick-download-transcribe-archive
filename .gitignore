@@ -4,3 +4,4 @@ yt-dlp.exe
 *.part
 *.ytdl
 HandBrakeCLI.exe
+*.pyc

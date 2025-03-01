@@ -3,10 +3,10 @@ import required.firefox_linkgrabber as firefox_linkgrabber
 import required.log_manager as log_manager
 import required.stable_whisper_handler as stable_whisper_handler  # Import Transcriber
 import required.ytdlp as ytdlp
-import os 
 import required.transcription_handler as transcription_handler 
 import required.file_management as file_management
 import required.handbrake_cli as handbrake_cli
+import os 
 
 """
 to skip download, use transcription_handler.py
@@ -15,13 +15,14 @@ to skip download, use transcription_handler.py
 from pathlib import Path
 
 class VODProcessor:
-    def __init__(self, firefox_path):
+    def __init__(self, channel, firefox_path):
         self.firefox_path = firefox_path  # Initialize the path to Firefox executable
-        self.log_manager = log_manager.LogManager(project_name="VODDownloader")  # Set up log manager
+        self.channel = channel
+        self.log_manager = log_manager.LogManager(project_name=f"{channel}_VODDownloader")  # Set up log manager
         self.transcriber = stable_whisper_handler.Transcriber(log_manager=self.log_manager)  # Set up transcriber
 
     def get_vods(self):
-        return firefox_linkgrabber.main(self.firefox_path)  # Retrieve VODs using Firefox
+        return firefox_linkgrabber.run(self.channel, self.firefox_path)  # Retrieve VODs using Firefox
 
     def download_vod(self, vod):
         vod_id = vod.split('/')[-1]  # Extract video ID from URL
@@ -35,7 +36,7 @@ class VODProcessor:
         return converter.convert_video(cleaned_path)  # Convert video
 
     def transcribe_vod(self, vod_path):
-        return transcription_handler.main(vod_path)  # Get transcription
+        return transcription_handler.transcribe_video(vod_path)  # Get transcription
 
     def run(self):
         vods = self.get_vods()
@@ -52,5 +53,5 @@ class VODProcessor:
 
 if __name__ == "__main__":
     firefox_executable_path = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
-    vod_processor = VODProcessor(firefox_path=firefox_executable_path)
+    vod_processor = VODProcessor(channel='jstlk', firefox_path=firefox_executable_path)
     vod_processor.run()  # Execute the VOD downloading process

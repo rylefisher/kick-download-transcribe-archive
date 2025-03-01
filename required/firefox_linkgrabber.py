@@ -32,10 +32,10 @@ class SeleniumFetcher:
         finally:
             self.quit_driver()
 
-    def find_combined_video_urls(self, page_content, base_url):
+    def find_combined_video_urls(self, channel, page_content, base_url):
         try:
             # Regex pattern to find all hrefs starting with '/jstlk/videos/'
-            pattern = r'href="(/jstlk/videos/[^"]+)"'
+            pattern = f'href="(/{channel}/videos/' + r'[^"]+)"'
             matches = re.findall(pattern, page_content)
             # Combine matches with base_url
             combined_urls = [base_url + match for match in matches]
@@ -53,14 +53,14 @@ class SeleniumFetcher:
         self.driver = None
 
 
-def main(firefox_binary_path=None):
+def run(channel='jstlk', firefox_binary_path=None):
     if firefox_binary_path==None:
         firefox_binary_path = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
-    page_url = "https://kick.com/jstlk/videos"
+    page_url = f"https://kick.com/{channel}/videos"
     base_url = "https://kick.com"
     fetcher = SeleniumFetcher(binary_path=firefox_binary_path)
     content = fetcher.fetch_page_content(page_url)
-    video_urls = fetcher.find_combined_video_urls(content, base_url)
+    video_urls = fetcher.find_combined_video_urls(content, channel, base_url)
     print("Found Video URLs:")
     for video_url in video_urls:
         print(video_url)
@@ -68,4 +68,4 @@ def main(firefox_binary_path=None):
 
 if __name__ == "__main__":
     binary_path = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
-    main(binary_path)
+    run(binary_path)

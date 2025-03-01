@@ -2,14 +2,16 @@ import os
 import subprocess
 from yt_dlp import YoutubeDL
 from pathlib import Path
+
+
 def download_video(url: str, base_download_path: str = ".") -> str:
     """Downloads a video using the specified format, tries 720p60 first, then best."""
-
+    yt_dlp_path = "binaries\\yt-dlp.exe"
     def update_yt_dlp():
         """Update yt-dlp to the latest version."""
         try:
             # Run yt-dlp update command
-            subprocess.run(["yt-dlp", "-U"], check=True)
+            subprocess.run([yt_dlp_path, "-U"], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Update error: {e}")
 
@@ -20,9 +22,8 @@ def download_video(url: str, base_download_path: str = ".") -> str:
     update_yt_dlp()  # Ensure yt-dlp is updated
 
     outtmpl = os.path.join(base_download_path, "%(title)s.%(ext)s")
-    dirs = Path(__file__).parent
     cmd = [
-        str(dirs / "yt-dlp.exe"),  # Adjust for your yt-dlp executable
+        yt_dlp_path,  # Adjust for your yt-dlp executable
         "-f",
         "720p60/best",  # Format priority
         "-o",
@@ -61,10 +62,8 @@ def convert_to_wav(input_filepath: str, output_filepath: str) -> None:
             check=True,  # use ffmpeg for conversion
         )
     except subprocess.CalledProcessError as e:
-        print(f"Conversion error: {e}")
+        print(f"Conversion error: {e}\n\nMAKE SURE FFMPEG IS IN SYS ENV VARS \n\n")
 
-
-# Example usage
 if __name__ == "__main__":
     test_url = "https://example.com/sample_video"
     download_path = "downloads"

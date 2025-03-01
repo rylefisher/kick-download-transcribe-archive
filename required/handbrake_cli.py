@@ -1,9 +1,10 @@
 import os
 import subprocess
 cwd = os.getcwd()  
+
 class HandbrakeConverter:
     def __init__(self, working_dir=os.getcwd(), handbrake_cli_path="HandBrakeCLI"):  # fixed default directory and CLI path
-        self.handbrake_cli_path = os.path.join(working_dir, handbrake_cli_path)  # use os.path.join for path
+        self.handbrake_cli_path = os.path.join(working_dir, 'binaries', handbrake_cli_path)  # use os.path.join for path
 
     def convert_video(self, input_path):
         # check if input file exists

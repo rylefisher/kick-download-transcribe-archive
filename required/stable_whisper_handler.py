@@ -19,7 +19,7 @@ import stable_whisper
 
 
 class Transcriber:
-    def __init__(self, log_manager=None, model_size="base"):
+    def __init__(self, model_size="base", log_manager=None):
         self.model = stable_whisper.load_faster_whisper(model_size)
         if log_manager:
             self.log_manager = log_manager
