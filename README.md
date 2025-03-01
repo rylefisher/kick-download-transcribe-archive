@@ -8,7 +8,7 @@
 
 ## Howto
 
-Run bat 
+Run bat or create venv, pip install, run main 
 
 ## prompt to reverse engineer bat
 
