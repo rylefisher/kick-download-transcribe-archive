@@ -15,3 +15,8 @@ venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
 ```
+
+## Todo
+
+- write html transcript search
+- make integrated log handler
