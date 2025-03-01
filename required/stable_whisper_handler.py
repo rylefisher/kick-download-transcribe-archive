@@ -1,21 +1,13 @@
-# transcriber.py
-import os
-import subprocess
-from pathlib import Path
-import stable_whisper
+
 
 """"write a robust ammendment that breaks a long wav file (hours) into 60 second segments. the transcription has the best effect if its done 60 seconds at a time. take the audio and process one hour at a time. break the first hour into 60 second segments. then transcribe each segment. itll return json of the transcript. store the transcript to have a dict with the true timestamp (not the literal timestamp but the section of the original video as a key). then combine that first hour into json. then do the second hour the same, delete the 60 second wav segments at the end of each hour. combine all the hours together into one transcript. then return the json transcript. also, ensure if the video is less than an hour it works as well. """
-import os
-import subprocess
-from pathlib import Path
-import json
-import stable_whisper
 
 import os
 import subprocess
 from pathlib import Path
 import json
 import stable_whisper
+from datetime import timedelta
 
 
 class Transcriber:
@@ -45,7 +37,7 @@ class Transcriber:
         """Split audio into segments of a specified length."""
         base_name = os.path.splitext(source_audio)[0]
         segments = []
-        
+
         try:
             # Get total duration of audio in seconds
             duration_output = subprocess.check_output([
@@ -91,7 +83,7 @@ class Transcriber:
             for hour in range(hours):
                 hour_segments = segments[hour * 60 : (hour + 1) * 60]
                 hour_transcript = self.transcribe_audio_segments(hour_segments)
-                
+
                 if hour_transcript:
                     result_json.update(hour_transcript)
 
@@ -104,3 +96,44 @@ class Transcriber:
         except Exception as e:
             print(f"An error occurred during transcription: {e}")
             return None
+
+    def write_html(self, transcript_json, video_name):
+        """Generate HTML files from transcript JSON."""
+        all_text = []
+        table_rows = []
+        for segment_start in sorted(transcript_json.keys()):
+            segment = transcript_json[segment_start]
+            start_time_hms = str(timedelta(seconds=segment_start))
+            all_text.append(segment["text"])
+            # Format HTML row
+            table_rows.append(
+                f"<tr><td>{segment['text']}</td><td>{start_time_hms}</td></tr>"
+            )
+
+        all_text_str = " ".join(all_text)
+
+        # HTML template
+        html_content = f"""
+        <html>
+        <head><title>Transcript for {video_name}</title></head>
+        <body>
+        <h1>Complete Transcript for {video_name}</h1>
+        <div>{all_text_str}</div>
+        <h2>Segment Table</h2>
+        <table border="1">
+            <tr><th>Segment Text</th><th>Start Time (hh:mm:ss)</th></tr>
+            {''.join(table_rows)}
+        </table>
+        </body>
+        </html>
+        """
+
+        # Write individual HTML file
+        individual_html_file = f"{video_name}_transcript.html"
+        with open(individual_html_file, "w") as f:
+            f.write(html_content)
+
+        # Append to joined transcript HTML file
+        joined_html_file = "joined_transcript.html"
+        with open(joined_html_file, "a") as f:
+            f.write(html_content)

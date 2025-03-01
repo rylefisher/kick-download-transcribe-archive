@@ -35,8 +35,10 @@ class VODProcessor:
         converter = handbrake_cli.HandbrakeConverter()  # HandBrake conversion setup
         return converter.convert_video(cleaned_path)  # Convert video
 
-    def transcribe_vod(self, vod_path):
-        return transcription_handler.transcribe_video(vod_path)  # Get transcription
+    def transcribe_vod(self, vod_path, v_id):
+        return transcription_handler.transcribe_video(
+            vod_path, v_id
+        )  # Get transcription
 
     def run(self):
         vods = self.get_vods()
@@ -45,10 +47,11 @@ class VODProcessor:
         for vod in vods:
             downloaded_file = self.download_vod(vod)
             if downloaded_file:
+                v_id = vod.split("/")[-1]
                 compressed_vod = self.process_vod(downloaded_file)
-                transcription = self.transcribe_vod(compressed_vod)
+                transcription = self.transcribe_vod(compressed_vod, v_id)
                 if transcription:
-                    print(f"Transcription for VOD {vod.split('/')[-1]}", transcription)
+                    print(f"Transcription for VOD {v_id}", transcription)
                     break  # Stop after processing the first VOD with transcription
 
 if __name__ == "__main__":
