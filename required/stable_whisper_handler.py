@@ -1,5 +1,3 @@
-
-
 """"write a robust ammendment that breaks a long wav file (hours) into 60 second segments. the transcription has the best effect if its done 60 seconds at a time. take the audio and process one hour at a time. break the first hour into 60 second segments. then transcribe each segment. itll return json of the transcript. store the transcript to have a dict with the true timestamp (not the literal timestamp but the section of the original video as a key). then combine that first hour into json. then do the second hour the same, delete the 60 second wav segments at the end of each hour. combine all the hours together into one transcript. then return the json transcript. also, ensure if the video is less than an hour it works as well. """
 
 import os
@@ -137,3 +135,4 @@ class Transcriber:
         joined_html_file = "joined_transcript.html"
         with open(joined_html_file, "a") as f:
             f.write(html_content)
+        subprocess.run([joined_html_file])
