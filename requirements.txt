@@ -47,3 +47,4 @@ torch
 torchvision
 torchaudio
 yt-dlp[default,curl-cffi]
+sv-ttk
