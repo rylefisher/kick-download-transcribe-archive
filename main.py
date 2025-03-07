@@ -6,10 +6,9 @@ import required.ytdlp as ytdlp
 import required.transcription_handler as transcription_handler 
 import required.file_management as file_management
 import required.handbrake_cli as handbrake_cli
-import os 
 
 """
-to skip download, use transcription_handler.py
+for testing and to skip download, use transcription_handler.py
 """
 
 from pathlib import Path
@@ -40,7 +39,7 @@ class VODProcessor:
             vod_path, v_id
         )  # Get transcription
 
-    def run(self):
+    def run(self, only_lastest=True):
         vods = self.get_vods()
         downloaded_vods = self.log_manager.get_downloaded_vods()  # Access downloaded VODs
 
@@ -52,7 +51,8 @@ class VODProcessor:
                 transcription = self.transcribe_vod(compressed_vod, v_id)
                 if transcription:
                     print(f"Transcription for VOD {v_id}", transcription)
-                    break  # Stop after processing the first VOD with transcription
+                    if only_lastest:
+                        break  # Stop after processing the first VOD with transcription
 
 if __name__ == "__main__":
     firefox_executable_path = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"

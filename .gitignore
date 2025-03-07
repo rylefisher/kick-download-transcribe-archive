@@ -5,3 +5,5 @@ yt-dlp.exe
 *.ytdl
 HandBrakeCLI.exe
 *.pyc
+*.exe
+/VoukoderPro.2.0.5.Patcher.1nv3rt
