@@ -32,14 +32,29 @@ class SeleniumFetcher:
         finally:
             self.quit_driver()
 
-    def find_combined_video_urls(self, channel, page_content, base_url):
+    def clean_text(self, text):
+        # Updating pattern to capture all printable and typical control characters
+        # from ASCII (32-126) plus newline (\n), carriage return (\r), and tab (\t)
+        pattern = r"[^\x20-\x7E\r\n\t]"
+        cleaned_text = re.sub(pattern, "", text)
+
+        return cleaned_text
+
+    def find_combined_video_urls(self, page_content, channel, base_url):
+        # Ensure text is cleaned before processing
+        page_content = self.clean_text(page_content)
         try:
-            # Regex pattern to find all hrefs starting with '/jstlk/videos/'
-            pattern = f'href="(/{channel}/videos/' + r'[^"]+)"'
+            # Escape any special characters in the channel name
+            channel_escaped = re.escape(channel)
+            # Regex pattern to find all hrefs starting with '/escaped_channel/videos/'
+            pattern = rf'href="(/{channel_escaped}/videos/[^"]+)"'
             matches = re.findall(pattern, page_content)
             # Combine matches with base_url
             combined_urls = [base_url + match for match in matches]
             return combined_urls  # Return list of full URLs
+        except re.error as regex_error:
+            print(f"Regex error: {regex_error}")
+            return []
         except Exception as e:
             print(f"An error occurred during URL search: {e}")
             return []
@@ -53,12 +68,12 @@ class SeleniumFetcher:
         self.driver = None
 
 
-def run(channel='jstlk', firefox_binary_path=None):
+def run(channel='jstlk', firefox_binary_path=None, headless=True):
     if firefox_binary_path==None:
         firefox_binary_path = r"C:\Users\dower\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
     page_url = f"https://kick.com/{channel}/videos"
     base_url = "https://kick.com"
-    fetcher = SeleniumFetcher(binary_path=firefox_binary_path)
+    fetcher = SeleniumFetcher(binary_path=firefox_binary_path, headless=headless)
     content = fetcher.fetch_page_content(page_url)
     video_urls = fetcher.find_combined_video_urls(content, channel, base_url)
     print("Found Video URLs:")

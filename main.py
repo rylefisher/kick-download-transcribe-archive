@@ -19,9 +19,9 @@ class VODProcessor:
             log_manager=self.log_manager
         )
 
-    def get_vods(self):
+    def get_vods(self, headless=True):
         # Retrieve VODs using the Firefox link grabber
-        return firefox_linkgrabber.run(self.channel, self.firefox_path)
+        return firefox_linkgrabber.run(self.channel, self.firefox_path, headless)
 
     def download_vod(self, vod):
         # Download VOD and log the download
