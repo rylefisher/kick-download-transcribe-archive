@@ -54,15 +54,12 @@ class VODProcessor:
                     print(f"Transcription for VOD {v_id}: {transcription}")
                 if self.delete_video_when_done:
                     file_management.delete_file(compressed_vod)  # Delete video if option is selected
+                rumble_handler.VideoAutomation(compressed_vod)
                 if only_latest:
                     break
 
 
 if __name__ == "__main__":
-
-    ## test
-    ## test
-
     firefox_executable_path = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
     vod_processor = VODProcessor(channel="jstlk", firefox_path=firefox_executable_path)
     vod_processor.run()
