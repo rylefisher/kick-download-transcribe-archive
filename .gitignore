@@ -7,3 +7,7 @@ HandBrakeCLI.exe
 *.pyc
 *.exe
 /VoukoderPro.2.0.5.Patcher.1nv3rt
+.env
+error.txt
+video_temp/2025-03-15_17-49-06.mp4
+required/rumble_video_archive.py
