@@ -135,20 +135,22 @@ class VideoAutomation:
 
         def set_category(self, primary, secondary):
             self.driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);"
+                "window.scrollTo(0, document.body.scrollHeight);"  # Scroll to bottom
             )
             time.sleep(2)
             self.driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);"
+                "window.scrollTo(0, document.body.scrollHeight);"  # Scroll to bottom again
             )
             time.sleep(2)
-            primary_input = self.driver.find_element(
-                By.XPATH, "//input[@data-default-placeholder='- Primary category -']"
+
+            primary_input = self.driver.find_element(  # Select by name for primary category
+                By.NAME, "primary-category"
             )
             primary_input.click()
             primary_input.send_keys(f"{primary}\n")
-            secondary_input = self.driver.find_element(
-                By.XPATH, "//input[@data-default-placeholder='- Secondary category -']"
+
+            secondary_input = self.driver.find_element(  # Select by name for secondary category
+                By.NAME, "secondary-category"
             )
             secondary_input.click()
             secondary_input.send_keys(f"{secondary}\n")
@@ -179,7 +181,7 @@ class VideoAutomation:
             submit_button = self.driver.find_element(By.CSS_SELECTOR, "#submitForm2")
             submit_button.click()
             time.sleep(2)
-            self.get_url()
+            return self.get_url()
 
         def interact_with_checkboxes(self):
             try:
@@ -249,9 +251,7 @@ class VideoAutomation:
                         file.write(f"{current_date}, {full_href}\n")
             else:
                 print("Href already exists in the log file.")
-            if self.env_loader.get_value("open_log_when_done"):
-                os.system(log_file_path)
-
+            return full_href
         def cleanup(self):
             pass
 

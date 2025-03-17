@@ -6,6 +6,7 @@ from pathlib import Path
 import json
 import stable_whisper
 from datetime import timedelta
+import webbrowser
 
 
 class Transcriber:
@@ -95,7 +96,7 @@ class Transcriber:
             print(f"An error occurred during transcription: {e}")
             return None
 
-    def write_html(self, transcript_json, video_name):
+    def write_html(self, transcript_json, video_name, log_folder, rumble_url):
         """Generate HTML files from transcript JSON."""
         all_text = []
         table_rows = []
@@ -109,7 +110,6 @@ class Transcriber:
             )
 
         all_text_str = " ".join(all_text)
-
         # HTML template
         html_content = f"""
         <html>
@@ -119,20 +119,32 @@ class Transcriber:
         <div>{all_text_str}</div>
         <h2>Segment Table</h2>
         <table border="1">
-            <tr><th>Segment Text</th><th>Start Time (hh:mm:ss)</th></tr>
-            {''.join(table_rows)}
+        <tr><th>Segment Text</th><th>Start Time (hh:mm:ss)</th></tr>
+        {''.join(table_rows)}
         </table>
+        <h2>Video Link</h2>
+        <a href="{rumble_url}">Watch on Rumble</a> <!-- Added rumble_url as a link -->
         </body>
         </html>
         """
 
+
+
+
+
+
+
+
         # Write individual HTML file
-        individual_html_file = f"{video_name}_transcript.html"
+        individual_html_file = log_folder / f"{video_name}_transcript.html"
         with open(individual_html_file, "w") as f:
             f.write(html_content)
 
         # Append to joined transcript HTML file
-        joined_html_file = "joined_transcript.html"
+        joined_html_file = Path(log_folder).parent / "joined_transcript.html"
         with open(joined_html_file, "a") as f:
             f.write(html_content)
-        subprocess.run([joined_html_file])
+        with open('temp.bat', "w") as f:
+            f.write(f'start "" "{joined_html_file}"')
+
+        subprocess.run(["temp.bat"])

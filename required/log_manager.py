@@ -4,9 +4,12 @@ from pathlib import Path
 
 
 class LogManager:
+
     def __init__(self, project_name="MyProject"):
         self.base_dir = Path.home() / "Documents" / project_name
+        self.transcripts_dir = Path.home() / "Documents" / project_name  / 'transcripts'
         self.base_dir.mkdir(parents=True, exist_ok=True)
+        self.transcripts_dir.mkdir(parents=True, exist_ok=True)
         self.vod_log_file = self.base_dir / "downloaded_vods.json"
         self.transcription_log_file = self.base_dir / "vod_transcriptions.json"
         self._init_log_file(self.vod_log_file)

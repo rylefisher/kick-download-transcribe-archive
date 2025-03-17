@@ -37,36 +37,41 @@ class VODProcessor:
         converter = handbrake_cli.HandbrakeConverter()
         return converter.convert_video(cleaned_path)
 
-    def transcribe_vod(self, vod_path, v_id):
-        try:
-            return transcription_handler.transcribe_video(
-                vod_path, v_id, self.log_manager.transcripts_dir
-            )
-        except Exception as e:
-            print(str(e))
+    def transcribe_vod(self, vod_path, v_id, rumble):
+        return transcription_handler.transcribe_video(
+            vod_path, v_id, self.log_manager.transcripts_dir, rumble
+        )
 
     def upload_to_rumble(self, compressed_vod):
-        rumble_handler.VideoAutomation(compressed_vod)
+        return rumble_handler.VideoAutomation(compressed_vod)
 
-    def run(self, only_latest=True):
-        vods = self.get_vods()
-        downloaded_vods = self.log_manager.get_downloaded_vods()
-        undownloaded_vods = self.log_manager.filter_undownloaded_vods(vods)
-        for vod in undownloaded_vods:
-            downloaded_file = self.download_vod(vod)
-            if downloaded_file:
+    def compress_transcribe_upload(self, downloaded_file, v_id):
+        if downloaded_file:
+            compressed_vod = self.compress_vod(downloaded_file)
+            url = self.upload_to_rumble(compressed_vod)
+            if self.transcribe_vod(compressed_vod, v_id, url):
+                print(f"Transcription for VOD {v_id}: is complete. ")
+                if self.delete_video_when_done:
+                    file_management.delete_file(compressed_vod)
+
+    def run(self, skip_download_path=None, only_latest=True):
+        if skip_download_path == None:
+            vods = self.get_vods()
+            downloaded_vods = self.log_manager.get_downloaded_vods()
+            undownloaded_vods = self.log_manager.filter_undownloaded_vods(vods)
+            for vod in undownloaded_vods:
+                downloaded_file = self.download_vod(vod)
                 v_id = vod.split("/")[-1]
-                compressed_vod = self.compress_vod(downloaded_file)
-                if self.transcribe_vod(compressed_vod, v_id): 
-                    print(f"Transcription for VOD {v_id}: is complete. ")
-                    if self.delete_video_when_done:
-                        file_management.delete_file(compressed_vod)
-                    self.upload_to_rumble(compressed_vod)
+                self.compress_transcribe_upload(downloaded_file, v_id)
                 if only_latest:
-                        break
+                    break
+        else:
+            v_id = skip_download_path.split("\\")[-1]
+            self.compress_transcribe_upload(skip_download_path, v_id)
 
 
 if __name__ == "__main__":
     firefox_executable_path = r"D:\Documents\FirefoxPortable\App\Firefox64\firefox.exe"
     vod_processor = VODProcessor(channel="jstlk", firefox_path=firefox_executable_path)
-    vod_processor.run()
+    pass_video = r"C:\Users\dower\Videos\Qelrqzzflama-R4r.mp4"
+    vod_processor.run(pass_video)
